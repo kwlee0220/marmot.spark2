@@ -1,0 +1,312 @@
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+buildscript {
+	repositories {
+		mavenLocal()
+		jcenter()
+	}
+	dependencies {
+		classpath 'com.github.jengelman.gradle.plugins:shadow:4.0.4'
+	}
+}
+ 
+group = 'etri'
+version = '20.02.12'
+
+sourceCompatibility = JavaVersion.VERSION_1_8;
+[compileJava,compileTestJava]*.options*.encoding = 'UTF-8'
+
+repositories {
+    mavenLocal()
+	maven {
+		url "http://www.datanucleus.org/downloads/maven2/"
+	}
+	maven {
+		url "http://repo.osgeo.org/repository/release/"
+	}
+    mavenCentral()
+}
+
+ext {
+	scala_version = '2.12'
+	spark_version = '3.1.2'
+	
+	mvel2_version = '2.4.14.Final'
+}
+
+dependencies {
+	compile project(':utils')
+	compile project(':marmot.common')
+	compile project(':marmot.core')
+	
+	compile ("org.apache.spark:spark-sql_${scala_version}:${spark_version}")
+	
+	implementation "org.mvel:mvel2:${mvel2_version}"
+}
+
+shadowJar {
+	classifier 'all'
+	
+	zip64 true
+	mergeServiceFiles()
+	
+	exclude 'META-INF/*.SF'
+	exclude 'META-INF/*.DSA'
+	exclude 'META-INF/*.RSA'
+	
+	relocate 'com.google', 'shadow.com.google'
+	relocate 'io.netty', 'shadow.io.netty'
+	relocate 'org.apache.commons.cli', 'shadow.org.apache.commons.cli'
+	
+	dependencies {
+		exclude(dependency("org.apache.hadoop:.*:"))
+		exclude(dependency("org.apache.curator:.*:"))
+		
+		exclude(dependency("org.apache.avro:.*:"))
+		exclude(dependency("org.codehaus.jackson:.*:"))
+		exclude(dependency("org.xerial.snappy:.*:"))
+		exclude(dependency("com.thoughtworks.paranamer:.*:"))
+//		exclude(dependency("org.slf4j:.*:"))
+		
+		exclude(dependency("org.apache.spark:.*:"))
+		exclude(dependency("org.scalatest:.*:"))
+		exclude(dependency("com.ning:.*:"))
+		exclude(dependency("com.twitter:.*:"))
+		exclude(dependency("com.fasterxml.jackson.module:.*:"))
+		exclude(dependency("net.java.dev.jets3t:.*:"))
+		exclude(dependency("net.razorvine:.*:"))
+		exclude(dependency("org.json4s:.*:"))
+		exclude(dependency("junit:.*:"))
+		exclude(dependency("com.twitter:.*:"))
+		exclude(dependency("io.dropwizard.metrics:.*:"))
+		exclude(dependency("org.apache.httpcomponents:.*:"))
+		exclude(dependency("javax.servlet:.*:"))
+		exclude(dependency("javax.xml.bind:.*:"))
+		exclude(dependency("org.w3c:.*:"))
+		exclude(dependency("javax.xml.bind:.*:"))
+		
+		exclude(dependency("org.apache.zookeeper:.*:"))
+		exclude(dependency("org.mortbay.jetty:.*:"))
+		exclude(dependency("com.sun.jersey:.*:"))
+		exclude(dependency("org.osgi:.*:"))
+		exclude(dependency("commons-io.*:.*:"))
+		exclude(dependency("org.apache.xbean:.*:"))
+		exclude(dependency("org.apache.ivy:.*:"))
+		exclude(dependency("org.apache.htrace:.*:"))
+		exclude(dependency(":commons-math3:"))
+		exclude(dependency(":commons-crypto:"))
+		exclude(dependency(":commons-compress:"))
+		exclude(dependency(":commons-httpclient:"))
+		exclude(dependency(":commons-codec:"))
+		exclude(dependency("xmlenc:.*:"))
+		exclude(dependency(":commons-crypto:"))
+
+		exclude(dependency("com.fasterxml.jackson.core:.*:"))
+		exclude(dependency("org.glassfish.*:.*:"))
+		exclude(dependency("net.sf.py4j:.*:"))
+		exclude(dependency("com.clearspring.analytics:.*:"))
+		exclude(dependency("oro:.*:"))
+	}
+}
+
+task sourceJar(type: Jar) {
+	classifier 'sources'
+	from sourceSets.main.allSource
+}
+
+javadoc {
+	exclude "**/proto/**"
+	options.charSet = 'UTF-8'
+}
+task javadocJar(type: Jar) {
+	classifier 'javadoc'
+	from javadoc.destinationDir
+}
+
+ext.distDir = "${System.env.HOME}/etc/marmot/marmot.spark.dist"
+task distributeBinary(type:Copy) {
+	dependsOn assemble
+	into "${distDir}"
+	from ("${projectDir}") {
+		include 'bin/**'
+		include '*.properties'
+		include '.gitignore'
+	}
+}
+
+artifacts {
+	archives sourceJar
+	archives javadocJar
+	archives shadowJar
+}
+
+publishing {
+	publications {
+		marmotSpark(MavenPublication) {
+			from components.java
+			
+			artifact sourceJar
+			artifact javadocJar
+			artifact shadowJar
+		}
+	}
+}
+
+apply plugin: 'eclipse'
+eclipse {
+	classpath {
+		file {
+			withXml {
+				def node = it.asNode()
+				node.appendNode('classpathentry', [kind: 'output', path: 'classes'])
+			}
+			
+			whenMerged { cp ->
+				Map entryByPath = cp.entries.groupBy { entry -> entry.path }
+				entryByPath.each { key, values ->
+					if ( values.size() > 1 ) {
+            			def entry = values.first()
+            			if ( entry.kind == 'src' ) {
+            				entry.includes = []
+            				entry.excludes = []
+            			}
+            			int index = cp.entries.indexOf entry
+            			cp.entries.removeAll values
+            			cp.entries.add index, entry
+					}
+				}
+				cp.entries.each { entry ->
+					if ( entry.kind == 'src' && entry.hasProperty('output') ) {
+						if ( entry.path.startsWith("src/test/") ) {
+							entry.output = 'test_classes'
+						}
+						else {
+							entry.output = 'classes'
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+/*
+apply plugin: 'java'
+
+group = 'etri'
+version = '18.12.02'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+[compileJava,compileTestJava]*.options*.encoding = 'UTF-8'
+
+repositories {
+    mavenCentral()
+	maven {
+		url "https://jitpack.io"
+	}
+	maven {
+		name = "io.vavr"
+		url "https://oss.sonatype.org/content/repositories/snapshots"
+	}
+}
+
+ext.jcip_anno_version = '1.0'
+ext.cglib_version = '3.2.5'
+ext.guava_version = '25.1-jre'
+ext.vavr_version = '0.9.2'
+ext.commons_io_version = '2.6'
+ext.commons_cli_version = '1.4'
+ext.gson_version = '2.8.5'
+ext.commons_lang3_version = '3.7'
+ext.junit_version = '4.12'
+ext.mokito_version = '2.23.0'
+ext.hamcrest_version = '1.3'
+ext.lz4_java_version = '1.6.0' 
+
+dependencies {
+	compile "org.slf4j:slf4j-log4j12:${slf4j_log4j_version}"
+	compile "net.jcip:jcip-annotations:${jcip_anno_version}"
+	compile "com.google.guava:guava:${guava_version}"
+	compile "io.vavr:vavr:${vavr_version}"
+	compile "commons-io:commons-io:${commons_io_version}"
+	compile "commons-cli:commons-cli:${commons_cli_version}"
+	compile "cglib:cglib:${cglib_version}"
+	compile "org.lz4:lz4-java:${lz4_java_version}"
+	
+	compile "com.google.code.gson:gson:${gson_version}"
+	compile "org.apache.commons:commons-lang3:${commons_lang3_version}"
+	
+	
+	testCompile "junit:junit:${junit_version}"
+	testCompile "org.mockito:mockito-core:${mokito_version}"
+	testCompile "org.hamcrest:hamcrest-all:${hamcrest_version}"
+	
+}
+
+task sourceJar(type: Jar) {
+	classifier 'sources'
+	from sourceSets.main.allSource
+}
+
+javadoc {
+	options.encoding = 'UTF-8'
+	options.links("https://docs.oracle.com/javase/8/docs/api/")
+	options.links("https://google.github.io/guava/releases/23.0/api/docs/")
+	options.links("http://reactivex.io/RxJava/javadoc/")
+}
+task javadocJar(type: Jar) {
+	classifier 'javadoc'
+	from javadoc.destinationDir
+}
+
+artifacts {
+	archives sourceJar
+	archives javadocJar
+}
+
+apply plugin: 'maven-publish'
+publishing {
+	publications {
+		main(MavenPublication) {
+			artifact jar
+			artifact sourceJar
+			artifact javadocJar
+		}
+	}
+}
+
+apply plugin: 'eclipse'
+eclipse {
+	classpath {
+		file {
+			withXml {
+				def node = it.asNode()
+				node.appendNode('classpathentry', [kind: 'output', path: 'classes'])
+			}
+			
+			whenMerged { cp ->
+				Map entryByPath = cp.entries.groupBy { entry -> entry.path }
+				entryByPath.each { key, values ->
+					if ( values.size() > 1 ) {
+            			def entry = values.first()
+            			if ( entry.kind == 'src' ) {
+            				entry.includes = []
+            				entry.excludes = []
+            			}
+            			int index = cp.entries.indexOf entry
+            			cp.entries.removeAll values
+            			cp.entries.add index, entry
+					}
+				}
+				cp.entries.each { entry ->
+					if ( entry.kind == 'src' && entry.hasProperty('output') ) {
+						entry.output = 'classes'
+					}
+				}
+			}
+		}
+	}
+}
+*/

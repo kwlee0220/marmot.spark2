@@ -1,0 +1,13 @@
+rootProject.name = 'marmot.spark2'
+
+ext.common_dir = "../../common"
+['utils', 'utilsx'].each {
+	include ":$it"
+	project(":$it").projectDir = file("$common_dir/$it")
+}
+
+ext.marmot_dir = ".."
+['marmot.common', 'marmot.core', 'marmot'].each {
+	include ":$it"
+	project(":$it").projectDir = file("$marmot_dir/$it")
+}

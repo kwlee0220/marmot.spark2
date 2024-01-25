@@ -1,0 +1,9 @@
+#!	/bin/bash
+
+spark-submit --class marmot.spark.command.TestSparkMain	\
+			--master yarn --deploy-mode client	\
+			--num-executors 89	\
+			--driver-memory 5g	\
+			--executor-memory 8g	\
+			$MARMOT_SPARK_HOME/bin/marmot.spark2.jar	\
+			"$@"

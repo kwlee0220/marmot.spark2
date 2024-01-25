@@ -1,0 +1,9 @@
+#!	/bin/bash
+
+spark-submit --class marmot.spark.command.PBMarmotSparkSessionMain	\
+			--master yarn --deploy-mode cluster	\
+			--num-executors 89	\
+			--driver-memory 4g	\
+			--executor-memory 8g	\
+			$MARMOT_SPARK_HOME/bin/marmot.spark.jar	\
+			-runner local-mr -run_at_cluster "$@"
