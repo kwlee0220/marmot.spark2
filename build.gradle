@@ -150,7 +150,6 @@ publishing {
 	}
 }
 
-apply plugin: 'eclipse'
 eclipse {
 	classpath {
 		file {
