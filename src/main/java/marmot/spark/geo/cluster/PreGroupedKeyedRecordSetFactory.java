@@ -2,9 +2,9 @@ package marmot.spark.geo.cluster;
 
 import java.util.Iterator;
 
+import utils.KeyValue;
 import utils.Utilities;
 import utils.func.FOption;
-import utils.func.KeyValue;
 import utils.stream.FStream;
 import utils.stream.FStreams.AbstractFStream;
 import utils.stream.KVFStream;

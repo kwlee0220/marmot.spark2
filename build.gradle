@@ -1,32 +1,28 @@
-apply plugin: 'java'
-apply plugin: 'maven-publish'
-apply plugin: 'com.github.johnrengelman.shadow'
-
-buildscript {
-	repositories {
-		mavenLocal()
-		jcenter()
-	}
-	dependencies {
-		classpath 'com.github.jengelman.gradle.plugins:shadow:4.0.4'
-	}
+plugins {
+	id 'java-library'
+	id 'eclipse'
+	id 'com.github.johnrengelman.shadow' version '8.1.1'
+	id 'maven-publish'
 }
  
 group = 'etri'
 version = '20.02.12'
 
-sourceCompatibility = JavaVersion.VERSION_1_8;
+sourceCompatibility = '17'
+targetCompatibility = '17'
 [compileJava,compileTestJava]*.options*.encoding = 'UTF-8'
 
 repositories {
-    mavenLocal()
+	mavenLocal()
 	maven {
 		url "http://www.datanucleus.org/downloads/maven2/"
+		allowInsecureProtocol = true
 	}
 	maven {
-		url "http://repo.osgeo.org/repository/release/"
+		url "https://repo.osgeo.org/repository/release/"
+		allowInsecureProtocol = true
 	}
-    mavenCentral()
+	mavenCentral()
 }
 
 ext {
@@ -37,17 +33,17 @@ ext {
 }
 
 dependencies {
-	compile project(':utils')
-	compile project(':marmot.common')
-	compile project(':marmot.core')
+	implementation project(':utils')
+	implementation project(':marmot.common')
+	implementation project(':marmot.core')
 	
-	compile ("org.apache.spark:spark-sql_${scala_version}:${spark_version}")
+	implementation ("org.apache.spark:spark-sql_${scala_version}:${spark_version}")
 	
 	implementation "org.mvel:mvel2:${mvel2_version}"
 }
 
 shadowJar {
-	classifier 'all'
+	// classifier 'all'
 	
 	zip64 true
 	mergeServiceFiles()
@@ -112,7 +108,7 @@ shadowJar {
 }
 
 task sourceJar(type: Jar) {
-	classifier 'sources'
+	// classifier 'sources'
 	from sourceSets.main.allSource
 }
 
@@ -121,7 +117,7 @@ javadoc {
 	options.charSet = 'UTF-8'
 }
 task javadocJar(type: Jar) {
-	classifier 'javadoc'
+	// classifier 'javadoc'
 	from javadoc.destinationDir
 }
 

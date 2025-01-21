@@ -74,6 +74,8 @@ import marmot.spark.optor.reducer.AggregateByGroup;
 import marmot.spark.optor.reducer.TakeByGroup;
 import marmot.type.GeometryDataType;
 import scala.Tuple2;
+
+import utils.Indexed;
 import utils.Utilities;
 import utils.func.FOption;
 import utils.func.Tuple;
@@ -578,8 +580,8 @@ public final class MarmotRDD implements Serializable {
 		Set<Integer> idxes = Sets.newHashSet(Ints.asList(keyColIdxes));
 		int[] valueColIdxes = FStream.from(getRecordSchema().getColumns())
 									.zipWithIndex()
-									.filter(t -> !idxes.contains(t._2))
-									.map(Tuple::_1)
+									.filter(t -> !idxes.contains(t.index()))
+									.map(Indexed::value)
 									.mapToInt(Column::ordinal)
 									.toArray();
 		RecordSchema valueSchema = getRecordSchema().project(valueColIdxes);

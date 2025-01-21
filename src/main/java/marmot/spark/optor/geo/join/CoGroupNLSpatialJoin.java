@@ -2,15 +2,17 @@ package marmot.spark.optor.geo.join;
 
 import java.util.Iterator;
 
+import utils.stream.FStream;
+
 import marmot.Record;
 import marmot.RecordSchema;
 import marmot.optor.geo.SpatialRelation;
 import marmot.optor.geo.join.SpatialJoinMatcher;
 import marmot.optor.geo.join.SpatialJoinMatchers;
+import marmot.optor.geo.join.SpatialLookupTable;
 import marmot.plan.SpatialJoinOptions;
 import marmot.spark.RecordLite;
 import marmot.support.EnvelopeTaggedRecord;
-import utils.stream.FStream;
 
 /**
  * 
@@ -45,10 +47,17 @@ public abstract class CoGroupNLSpatialJoin extends CoGroupSpatialJoin {
 		
 		return FStream.from(left)
 						.map(r -> r.toRecord(lSchema))
-						.flatMap(r -> combine(r, sjMatcher.match(r, slut)
-														.map(EnvelopeTaggedRecord::getRecord)
-														.mapIf(m_semiJoin, fstrm -> fstrm.take(1))))
+						.flatMap(r -> combine(r, inner(sjMatcher, r, slut)))
 						.map(RecordLite::from)
 						.iterator();
+	}
+	
+	private FStream<Record> inner(SpatialJoinMatcher sjMatcher, Record outer, SpatialLookupTable slut) {
+		FStream<Record> records = sjMatcher.match(outer, slut)
+											.map(EnvelopeTaggedRecord::getRecord);
+		if ( m_semiJoin ) {
+			records = records.take(1);
+		}
+		return records;
 	}
 }

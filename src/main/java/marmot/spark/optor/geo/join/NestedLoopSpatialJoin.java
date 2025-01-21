@@ -12,6 +12,11 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
 
+import utils.KeyValue;
+import utils.func.Tuple;
+import utils.stream.FStream;
+import utils.stream.KVFStream;
+
 import marmot.GRecordSchema;
 import marmot.Record;
 import marmot.RecordSchema;
@@ -29,10 +34,6 @@ import marmot.spark.RecordLite;
 import marmot.spark.dataset.SparkDataSet;
 import marmot.spark.optor.AbstractRDDFunction;
 import marmot.support.EnvelopeTaggedRecord;
-import utils.func.KeyValue;
-import utils.func.Tuple;
-import utils.stream.FStream;
-import utils.stream.KVFStream;
 
 /**
  * 
@@ -275,8 +276,11 @@ public abstract class NestedLoopSpatialJoin extends AbstractRDDFunction {
 		FStream<Record> inners = m_cache.queryClusterKeys(key)
 										.map(m_cache::getCluster)
 										.flatMap(cluster -> m_sjMatcher.match(outer, cluster))
-										.map(EnvelopeTaggedRecord::getRecord)
-										.mapIf(m_semiJoin, fstrm -> fstrm.take(1));
+										.map(EnvelopeTaggedRecord::getRecord);
+		if ( m_semiJoin ) {
+			inners = inners.take(1);
+		}
+		
 		++m_outerCount;
 		
 		return new NestedLoopMatch(outer, m_innerSchama, inners);

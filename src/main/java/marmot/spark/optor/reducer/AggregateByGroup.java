@@ -7,6 +7,10 @@ import org.apache.spark.api.java.JavaRDD;
 
 import com.google.common.collect.Lists;
 
+import utils.Utilities;
+import utils.func.Tuple4;
+import utils.stream.FStream;
+
 import marmot.GRecordSchema;
 import marmot.RecordSchema;
 import marmot.optor.AggregateFunction;
@@ -14,9 +18,6 @@ import marmot.plan.Group;
 import marmot.spark.MarmotSpark;
 import marmot.spark.RecordLite;
 import marmot.spark.optor.AbstractRDDFunction;
-import utils.Utilities;
-import utils.func.Tuple4;
-import utils.stream.FStream;
 
 /**
  * 
@@ -53,8 +54,8 @@ public class AggregateByGroup extends AbstractRDDFunction {
 		m_valueSchema = inputSchema.project(colIdxes._4);
 		RecordSchema aggrSchema = FStream.of(m_aggrs)
 										.zipWithIndex()
-										.peek(t -> t._1.initialize(t._2, m_valueSchema))
-										.map(t -> t._1.getOutputColumn())
+										.peek(t -> t.value().initialize(t.index(), m_valueSchema))
+										.map(t -> t.value().getOutputColumn())
 										.fold(RecordSchema.builder(), (b,c) -> b.addColumn(c))
 										.build();
 		RecordSchema outputSchema = RecordSchema.concat(grpSchema, aggrSchema);

@@ -23,7 +23,7 @@ public class QuadSpacePartitioner extends Partitioner {
 		QuadSpacePartition[] partitions = FStream.from(quadKeys)
 												.sort((v1,v2) -> v1.compareTo(v2))
 												.zipWithIndex()
-												.map(t -> new QuadSpacePartition(t._2, t._1))
+												.map(t -> new QuadSpacePartition(t.index(), t.value()))
 												.toArray(QuadSpacePartition.class);
 		Utilities.checkArgument(partitions.length > 0, "empty quadkeys");
 		
