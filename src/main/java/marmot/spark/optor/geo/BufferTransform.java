@@ -12,9 +12,10 @@ import marmot.plan.GeomOpOptions;
 import marmot.spark.RecordLite;
 import marmot.support.DataUtils;
 import marmot.type.GeometryDataType;
+
+import utils.Tuple;
 import utils.Utilities;
 import utils.func.FOption;
-import utils.func.Tuple;
 
 /**
  * 

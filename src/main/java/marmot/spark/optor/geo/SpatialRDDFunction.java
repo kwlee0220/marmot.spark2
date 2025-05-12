@@ -15,9 +15,10 @@ import marmot.spark.MarmotSpark;
 import marmot.spark.RecordLite;
 import marmot.spark.optor.AbstractRDDFunction;
 import marmot.type.GeometryDataType;
+
+import utils.Tuple;
 import utils.Utilities;
 import utils.func.FOption;
-import utils.func.Tuple;
 import utils.stream.FStream;
 
 /**

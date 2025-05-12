@@ -5,11 +5,12 @@ import org.locationtech.jts.geom.Point;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import utils.Tuple;
+
 import marmot.GRecordSchema;
 import marmot.plan.GeomOpOptions;
 import marmot.spark.RecordLite;
 import marmot.type.GeometryDataType;
-import utils.func.Tuple;
 
 
 /**

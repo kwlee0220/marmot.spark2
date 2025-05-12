@@ -7,7 +7,7 @@ import utils.Utilities;
 import utils.func.FOption;
 import utils.stream.FStream;
 import utils.stream.FStreams.AbstractFStream;
-import utils.stream.KVFStream;
+import utils.stream.KeyValueFStream;
 
 import marmot.spark.RecordLite;
 
@@ -17,7 +17,7 @@ import scala.Tuple2;
  * 
  * @author Kang-Woo Lee (ETRI)
  */
-public class PreGroupedKeyedRecordSetFactory<K> implements KVFStream<K,FStream<RecordLite>> {
+public class PreGroupedKeyedRecordSetFactory<K> implements KeyValueFStream<K,FStream<RecordLite>> {
 	private final Iterator<Tuple2<K,RecordLite>> m_src;
 
 	private Tuple2<K,RecordLite> m_next;

@@ -76,9 +76,9 @@ import marmot.type.GeometryDataType;
 import scala.Tuple2;
 
 import utils.Indexed;
+import utils.Tuple;
 import utils.Utilities;
 import utils.func.FOption;
-import utils.func.Tuple;
 import utils.stream.FStream;
 
 /**

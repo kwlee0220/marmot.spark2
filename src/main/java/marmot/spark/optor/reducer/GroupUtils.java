@@ -12,8 +12,8 @@ import marmot.plan.Group;
 import marmot.spark.RecordLite;
 import scala.Tuple2;
 import utils.CSV;
-import utils.func.Tuple;
-import utils.func.Tuple4;
+import utils.Tuple;
+import utils.Tuple4;
 
 
 /**

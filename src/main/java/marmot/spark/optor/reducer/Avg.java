@@ -9,7 +9,7 @@ import marmot.spark.RecordLite;
 import marmot.support.DataUtils;
 import marmot.type.DataType;
 import utils.CSV;
-import utils.func.Tuple;
+import utils.Tuple;
 
 /**
  * 

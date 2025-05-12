@@ -7,8 +7,8 @@ import org.apache.spark.api.java.JavaRDD;
 
 import com.google.common.collect.Lists;
 
+import utils.Tuple4;
 import utils.Utilities;
-import utils.func.Tuple4;
 import utils.stream.FStream;
 
 import marmot.GRecordSchema;
