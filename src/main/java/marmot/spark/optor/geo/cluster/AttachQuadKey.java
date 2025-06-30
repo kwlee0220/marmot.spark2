@@ -31,7 +31,7 @@ public class AttachQuadKey extends AbstractRDDFunction {
 	public static final String COL_MBR = AttachQuadKeyRSet.COL_MBR;
 	
 	private final List<String> m_qkeys;
-	@Nullable private final Envelope m_validRange;
+	private final @Nullable Envelope m_validRange;
 	private final boolean m_bindOutlier;
 	private final boolean m_bindOnlyToOwner;	// 주어진 공간정보가 포함되는 모든 quad-key를 포함시킬지
 												// 아니면 owner quad-key만 포함시킬 지 결정 

@@ -28,7 +28,7 @@ public class TakeByGroup implements RDDFunction, Serializable {
 	private final Group m_group;
 	private final int m_takeCount;
 	
-	@Nullable private KeyValueComparator m_orderCmptor = null;
+	private @Nullable KeyValueComparator m_orderCmptor = null;
 	
 	public TakeByGroup(Group group, int takeCount) {
 		m_group = group;

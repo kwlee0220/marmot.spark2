@@ -22,8 +22,8 @@ import marmot.type.GeometryDataType;
  * @author Kang-Woo Lee (ETRI)
  */
 public class FilterSpatially extends SpatialRecordLevelRDDFilter {
-	@Nullable private final Envelope m_keyBounds;
-	@Nullable private final String m_keyDsId;
+	private final @Nullable Envelope m_keyBounds;
+	private final @Nullable String m_keyDsId;
 	private Geometry m_key;
 	private PreparedGeometry m_pkey;
 	private final SpatialRelation m_rel;

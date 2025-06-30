@@ -16,11 +16,11 @@ public class SparkSessionBuilder {
 	@SuppressWarnings("unused")
 	private static final Logger s_logger = LoggerFactory.getLogger(SparkSessionBuilder.class);
 	
-	@Nullable private String m_applName = null;
-	@Nullable private String m_execMemorySize = null;
-	@Nullable private String m_driverMemorySize = null;
-	@Nullable private String m_maxResultSize = null;
-	@Nullable private String m_dirverHost = null;
+	private @Nullable String m_applName = null;
+	private @Nullable String m_execMemorySize = null;
+	private @Nullable String m_driverMemorySize = null;
+	private @Nullable String m_maxResultSize = null;
+	private @Nullable String m_dirverHost = null;
 	
 	public SparkSession build()
 		throws Exception {

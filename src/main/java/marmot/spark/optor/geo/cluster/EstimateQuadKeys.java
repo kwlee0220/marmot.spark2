@@ -38,7 +38,7 @@ public class EstimateQuadKeys extends AbstractRDDFunction {
 	public static RecordSchema SCHEMA = SampledQuadSpace.SCHEMA;
 	
 	private final double m_sampleRatio;
-	@Nullable private Envelope m_validBounds;
+	private @Nullable Envelope m_validBounds;
 	private long m_clusterSize = -1;
 
 	private long m_splitSize;

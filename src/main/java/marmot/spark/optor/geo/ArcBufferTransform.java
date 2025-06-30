@@ -40,7 +40,7 @@ public class ArcBufferTransform implements RDDFunction, Serializable {
 	private final GeomOpOptions m_opts;
 	
 	// optional arguments
-	@Nullable private QuadSpacePartitioner m_partitioner;
+	private @Nullable QuadSpacePartitioner m_partitioner;
 	
 	public ArcBufferTransform(double distance, boolean dissolve, GeomOpOptions opts) {
 		Preconditions.checkArgument(Double.compare(distance, 0d) > 0,
