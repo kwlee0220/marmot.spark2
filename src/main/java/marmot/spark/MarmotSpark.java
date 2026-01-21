@@ -37,6 +37,11 @@ import org.locationtech.jts.geom.Polygon;
 
 import com.google.common.collect.Maps;
 
+import utils.UnitUtils;
+import utils.Utilities;
+import utils.func.FOption;
+import utils.stream.FStream;
+
 import marmot.RecordSchema;
 import marmot.dataset.Catalog;
 import marmot.dataset.DataSetExistsException;
@@ -64,10 +69,6 @@ import marmot.spark.type.MultiPolygonUDT;
 import marmot.spark.type.PointUDT;
 import marmot.spark.type.PolygonUDT;
 import marmot.type.GridCell;
-import utils.UnitUtils;
-import utils.Utilities;
-import utils.func.FOption;
-import utils.stream.FStream;
 
 /**
  * 
@@ -257,7 +258,7 @@ public class MarmotSpark implements Serializable {
 		DataSetInfo dsInfo = new DataSetInfo(dsId, opts.type(), schema);
 		dsInfo.setGeometryColumnInfo(opts.geometryColumnInfo());
 		dsInfo.setBlockSize(opts.blockSize()
-								.getOrElse(() -> getDefaultBlockSize(DataSetType.FILE)));
+								.orElseGet(() -> getDefaultBlockSize(DataSetType.FILE)));
 		dsInfo.setCompressionCodecName(opts.compressionCodecName());
 		dsInfo.setUpdatedMillis(System.currentTimeMillis());
 		m_catalog.initialize(dsInfo);

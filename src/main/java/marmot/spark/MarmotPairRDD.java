@@ -7,6 +7,8 @@ import org.apache.spark.Partitioner;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 
+import utils.func.FOption;
+
 import marmot.GRecordSchema;
 import marmot.RecordSchema;
 import marmot.dataset.DataSetType;
@@ -16,7 +18,6 @@ import marmot.spark.dataset.SequenceFileDataSet;
 import marmot.spark.dataset.SparkDataSet;
 import marmot.spark.optor.StoreAsClusteredFilePartitions;
 import marmot.spark.optor.UpdateDataSetInfo;
-import utils.func.FOption;
 
 /**
  * 
@@ -93,7 +94,7 @@ public class MarmotPairRDD implements Serializable {
 	public void store(String dsId, StoreDataSetOptions opts) {
 		// option에 GeometryColumnInfo가 없더라도 RDD에 공간 정보가 존재하는 경우에는
 		// option에 포함시킨다.
-		if ( opts.geometryColumnInfo().isAbsent() && getGeometryColumnInfo().isPresent() ) {
+		if ( opts.geometryColumnInfo().isEmpty() && getGeometryColumnInfo().isPresent() ) {
 			opts = opts.geometryColumnInfo(assertGeometryColumnInfo());
 		}
 		
@@ -108,7 +109,7 @@ public class MarmotPairRDD implements Serializable {
 		
 		// 'append' 요청이 없으면 새로운 SequenceFileDataSet을 생성한다.
 		// 만일 동일 식별자의 SparkDataSet가 이미 존재하는 경우에는 오류가 발생한다.
-		if ( !opts.append().getOrElse(false) ) {
+		if ( !opts.append().orElse(false) ) {
 			seqDs = (SequenceFileDataSet)m_marmot.createDataSet(dsId, schema, opts.toCreateOptions());
 		}
 		else if ( seqDs.getType() != DataSetType.FILE ) {

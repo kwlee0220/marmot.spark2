@@ -19,6 +19,11 @@ import org.locationtech.jts.geom.Geometry;
 import com.google.common.collect.Sets;
 import com.google.common.primitives.Ints;
 
+import utils.Indexed;
+import utils.Utilities;
+import utils.func.FOption;
+import utils.stream.FStream;
+
 import marmot.Column;
 import marmot.GRecordSchema;
 import marmot.PlanBuilder;
@@ -73,13 +78,8 @@ import marmot.spark.optor.reducer.Aggregate;
 import marmot.spark.optor.reducer.AggregateByGroup;
 import marmot.spark.optor.reducer.TakeByGroup;
 import marmot.type.GeometryDataType;
-import scala.Tuple2;
 
-import utils.Indexed;
-import utils.Tuple;
-import utils.Utilities;
-import utils.func.FOption;
-import utils.stream.FStream;
+import scala.Tuple2;
 
 /**
  * 
@@ -501,7 +501,7 @@ public final class MarmotRDD implements Serializable {
 	public void store(String dsId, StoreDataSetOptions opts) {
 		// option에 GeometryColumnInfo가 없더라도 RDD에 공간 정보가 존재하는 경우에는
 		// option에 포함시킨다.
-		if ( opts.geometryColumnInfo().isAbsent() && getGeometryColumnInfo().isPresent() ) {
+		if ( opts.geometryColumnInfo().isEmpty() && getGeometryColumnInfo().isPresent() ) {
 			opts = opts.geometryColumnInfo(assertGeometryColumnInfo());
 		}
 		
@@ -516,7 +516,7 @@ public final class MarmotRDD implements Serializable {
 		
 		// 'append' 요청이 없으면 새로운 SequenceFileDataSet을 생성한다.
 		// 만일 동일 식별자의 SparkDataSet가 이미 존재하는 경우에는 오류가 발생한다.
-		if ( !opts.append().getOrElse(false) ) {
+		if ( !opts.append().orElse(false) ) {
 			seqDs = (SequenceFileDataSet)m_marmot.createDataSet(dsId, schema, opts.toCreateOptions());
 		}
 		else if ( seqDs.getType() != DataSetType.FILE ) {

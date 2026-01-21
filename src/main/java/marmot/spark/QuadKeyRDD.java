@@ -10,6 +10,9 @@ import org.apache.spark.api.java.JavaPairRDD;
 
 import com.google.common.collect.Maps;
 
+import utils.func.FOption;
+import utils.stream.FStream;
+
 import marmot.GRecordSchema;
 import marmot.RecordSchema;
 import marmot.RecordSet;
@@ -24,9 +27,8 @@ import marmot.optor.CreateDataSetOptions;
 import marmot.spark.geo.cluster.PreGroupedKeyedRecordSetFactory;
 import marmot.spark.geo.cluster.QuadSpacePartitioner;
 import marmot.spark.optor.UpdateDataSetInfo;
+
 import scala.Tuple2;
-import utils.func.FOption;
-import utils.stream.FStream;
 
 /**
  * 
@@ -104,7 +106,7 @@ public class QuadKeyRDD implements Serializable {
 		
 		//
 		int packCount = partCount.getOrElse(m_marmot.getDefaultPartitionCount());
-		long blockSize = opts.blockSize().getOrElse(m_marmot.getDefaultBlockSize(type));
+		long blockSize = opts.blockSize().orElse(m_marmot.getDefaultBlockSize(type));
 		List<SpatialClusterInfo> scInfos
 			= taggeds.coalesce(packCount)
 					.mapPartitionsWithIndex((idx,iter) -> storePack(path, idx, iter, blockSize), false)

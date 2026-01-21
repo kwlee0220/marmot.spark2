@@ -18,6 +18,11 @@ import org.locationtech.jts.geom.Geometry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import utils.Throwables;
+import utils.func.FOption;
+import utils.func.UncheckedFunction;
+import utils.stream.FStream;
+
 import marmot.GRecordSchema;
 import marmot.RecordSet;
 import marmot.dataset.Catalog;
@@ -51,10 +56,6 @@ import marmot.spark.MarmotSpark;
 import marmot.spark.QuadKeyRDD;
 import marmot.spark.RecordLite;
 import marmot.spark.geo.cluster.QuadSpacePartitioner;
-import utils.Throwables;
-import utils.func.FOption;
-import utils.func.UncheckedFunction;
-import utils.stream.FStream;
 
 /**
  * 
@@ -244,7 +245,7 @@ public class SequenceFileDataSet implements SparkDataSet, HdfsDataSet<MarmotRDD>
 		}
 		else {
 			long blockSize = opts.blockSize()
-								.getOrElse(m_marmot.getDefaultBlockSize(DataSetType.SPATIAL_CLUSTER));
+								.orElse(m_marmot.getDefaultBlockSize(DataSetType.SPATIAL_CLUSTER));
 			long sampleSize = opts.sampleSize().getOrElse(blockSize);
 			long clusterSize = opts.clusterSize().getOrElse(blockSize);
 			double sampleRatio = Math.min(1, (double)sampleSize / getLength());

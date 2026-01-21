@@ -42,7 +42,7 @@ public class StoreAsSequenceFilePartitions extends AbstractRDDFunction {
 	protected GRecordSchema _initialize(MarmotSpark marmot, GRecordSchema inputGSchema) {
 		Path rootPath = marmot.getCatalog().generateFilePath(m_dsId);
 		String partId = m_opts.partitionId()
-							.getOrElse(() -> UUID.randomUUID().toString());
+							.orElseGet(() -> UUID.randomUUID().toString());
 		m_path = HdfsPath.of(marmot.getHadoopFileSystem(), rootPath).child(partId);
 		
 		return new GRecordSchema(DataSetPartitionInfo.SCHEMA);
