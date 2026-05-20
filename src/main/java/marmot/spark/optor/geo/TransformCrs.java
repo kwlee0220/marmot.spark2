@@ -4,14 +4,15 @@ import java.util.Iterator;
 
 import org.locationtech.jts.geom.Geometry;
 
+import utils.Preconditions;
+import utils.stream.FStream;
+
 import marmot.GRecordSchema;
 import marmot.dataset.GeometryColumnInfo;
 import marmot.geo.CoordinateTransform;
 import marmot.spark.MarmotSpark;
 import marmot.spark.RecordLite;
 import marmot.spark.optor.AbstractRDDFunction;
-import utils.Utilities;
-import utils.stream.FStream;
 
 /**
  * 
@@ -24,7 +25,7 @@ public class TransformCrs extends AbstractRDDFunction {
 	
 	public TransformCrs(String toSrid) {
 		super(true);
-		Utilities.checkNotNullArgument(toSrid, "toSrid is null");
+		Preconditions.checkNotNullArgument(toSrid, "toSrid is null");
 		
 		m_toSrid = toSrid;
 	}

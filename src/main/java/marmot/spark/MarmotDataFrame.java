@@ -11,6 +11,10 @@ import org.apache.spark.sql.Row;
 import org.apache.spark.sql.functions;
 import org.locationtech.jts.geom.Geometry;
 
+import utils.CSV;
+import utils.Preconditions;
+import utils.func.FOption;
+
 import marmot.GRecordSchema;
 import marmot.PlanBuilder;
 import marmot.RecordSchema;
@@ -33,9 +37,6 @@ import marmot.spark.optor.geo.BufferTransform2;
 import marmot.spark.optor.geo.CentroidTransform2;
 import marmot.spark.optor.geo.SquareGrid;
 import marmot.spark.optor.reducer.AggregateByGroup2;
-import utils.CSV;
-import utils.Utilities;
-import utils.func.FOption;
 
 /**
  * 
@@ -105,7 +106,7 @@ public final class MarmotDataFrame implements Serializable {
 	 * @return 연산이 추가된 {@link PlanBuilder} 객체.
 	 */
 	public MarmotRDD defineColumn(String colDecl) {
-		Utilities.checkNotNullArgument(colDecl, "colDecl is null");
+		Preconditions.checkNotNullArgument(colDecl, "colDecl is null");
 
 		return toRDD().apply(new DefineColumn(colDecl));
 	}
@@ -119,15 +120,15 @@ public final class MarmotDataFrame implements Serializable {
 	 * @return 연산이 추가된 {@link PlanBuilder} 객체.
 	 */
 	public MarmotRDD defineColumn(String colDecl, String colInit) {
-		Utilities.checkNotNullArgument(colDecl, "colDecl is null");
-		Utilities.checkNotNullArgument(colInit, "colInit is null");
+		Preconditions.checkNotNullArgument(colDecl, "colDecl is null");
+		Preconditions.checkNotNullArgument(colInit, "colInit is null");
 
 		return toRDD().apply(new DefineColumn(colDecl, RecordScript.of(colInit)));
 	}
 	
 	public MarmotDataFrame updateSql(String colName, String updateExpr) {
-		Utilities.checkNotNullArgument(colName, "colName is null");
-		Utilities.checkNotNullArgument(updateExpr, "updateExpr is null");
+		Preconditions.checkNotNullArgument(colName, "colName is null");
+		Preconditions.checkNotNullArgument(updateExpr, "updateExpr is null");
 
 		return apply(new Update2(colName, colName));
 	}
@@ -200,7 +201,7 @@ public final class MarmotDataFrame implements Serializable {
 	 * @return	명령이 추가된 {@link PlanBuilder} 객체.
 	 */
 	public MarmotRDD assignGridCell(SquareGrid grid, boolean assignOutside) {
-		Utilities.checkNotNullArgument(grid, "SquareGrid is null");
+		Preconditions.checkNotNullArgument(grid, "SquareGrid is null");
 		
 		return toRDD().apply(new AssignSquareGridCell(grid, assignOutside));
 	}

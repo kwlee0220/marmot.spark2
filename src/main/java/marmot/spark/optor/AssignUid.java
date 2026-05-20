@@ -2,13 +2,14 @@ package marmot.spark.optor;
 
 import java.util.Iterator;
 
+import utils.Preconditions;
+import utils.stream.FStream;
+
 import marmot.GRecordSchema;
 import marmot.RecordSchema;
 import marmot.spark.MarmotSpark;
 import marmot.spark.RecordLite;
 import marmot.type.DataType;
-import utils.Utilities;
-import utils.stream.FStream;
 
 
 /**
@@ -28,7 +29,7 @@ public class AssignUid extends AbstractRDDFunction {
 	
 	public AssignUid(String colName) {
 		super(true);
-		Utilities.checkNotNullArgument(colName, "id column");
+		Preconditions.checkNotNullArgument(colName, "id column");
 		
 		m_uidColumn = colName;
 	}

@@ -2,6 +2,8 @@ package marmot.spark.optor.geo;
 
 import org.locationtech.jts.geom.Point;
 
+import utils.Preconditions;
+
 import marmot.Column;
 import marmot.GRecordSchema;
 import marmot.RecordSchema;
@@ -12,7 +14,6 @@ import marmot.spark.optor.RecordLevelRDDFunction;
 import marmot.support.DataUtils;
 import marmot.support.GeoUtils;
 import marmot.type.DataType;
-import utils.Utilities;
 
 /**
  * 
@@ -32,9 +33,9 @@ public class ToGeometryPoint extends RecordLevelRDDFunction {
 	public ToGeometryPoint(String xColName, String yColName, GeometryColumnInfo gcInfo) {
 		super(true);
 		
-		Utilities.checkNotNullArgument(xColName, "x-column is null");
-		Utilities.checkNotNullArgument(yColName, "y-column is null");
-		Utilities.checkNotNullArgument(gcInfo, "output GeometryColumnInfo is null");
+		Preconditions.checkNotNullArgument(xColName, "x-column is null");
+		Preconditions.checkNotNullArgument(yColName, "y-column is null");
+		Preconditions.checkNotNullArgument(gcInfo, "output GeometryColumnInfo is null");
 		
 		m_xColName = xColName;
 		m_yColName = yColName;

@@ -3,6 +3,9 @@ package marmot.spark.optor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import utils.Preconditions;
+import utils.Throwables;
+
 import marmot.GRecordSchema;
 import marmot.Record;
 import marmot.RecordScript;
@@ -12,8 +15,6 @@ import marmot.spark.MarmotSpark;
 import marmot.spark.RecordLite;
 import marmot.support.DefaultRecord;
 import marmot.support.RecordScriptExecution;
-import utils.Throwables;
-import utils.Utilities;
 
 
 /**
@@ -36,7 +37,7 @@ public class Update extends RecordLevelRDDFunction {
 	
 	public Update(RecordScript script) {
 		super(true);
-		Utilities.checkNotNullArgument(script, "update script is null");
+		Preconditions.checkNotNullArgument(script, "update script is null");
 		
 		m_script = script;
 		setLogger(s_logger);

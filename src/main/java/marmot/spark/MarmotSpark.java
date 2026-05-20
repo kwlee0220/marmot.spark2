@@ -37,8 +37,8 @@ import org.locationtech.jts.geom.Polygon;
 
 import com.google.common.collect.Maps;
 
+import utils.Preconditions;
 import utils.UnitUtils;
-import utils.Utilities;
 import utils.func.FOption;
 import utils.stream.FStream;
 
@@ -151,7 +151,7 @@ public class MarmotSpark implements Serializable {
 	 * @throws DataSetNotFoundException	식별자에 해당하는 데이터세트 등록정보가 없는 경우
 	 */
 	public DataSetInfo getDataSetInfo(String dsId) {
-		Utilities.checkNotNullArgument(dsId);
+		Preconditions.checkNotNullArgument(dsId, "dataset id is null");
 		
 		return m_catalog.getDataSetInfo(dsId)
 						.getOrThrow(()->new DataSetNotFoundException(dsId));
@@ -167,7 +167,7 @@ public class MarmotSpark implements Serializable {
 	 * @throws DataSetNotFoundException	식별자에 해당하는 데이터세트가 없는 경우
 	 */
 	public SparkDataSet getDataSet(String dsId) {
-		Utilities.checkNotNullArgument(dsId);
+		Preconditions.checkNotNullArgument(dsId, "dataset id is null");
 		
 		DataSetInfo info = m_catalog.getDataSetInfo(dsId)
 									.getOrThrow(() -> new DataSetNotFoundException(dsId));
@@ -184,7 +184,7 @@ public class MarmotSpark implements Serializable {
 	 * @return	데이터세트 객체
 	 */
 	public SparkDataSet getDataSetOrNull(String dsId) {
-		Utilities.checkNotNullArgument(dsId);
+		Preconditions.checkNotNullArgument(dsId, "dataset id is null");
 		
 		DataSetInfo info = m_catalog.getDataSetInfo(dsId).getOrNull();
 		if ( info == null ) {
@@ -213,7 +213,7 @@ public class MarmotSpark implements Serializable {
 	 * @return	데이터세트 리스트
 	 */
 	public List<SparkDataSet> getDataSetAllInDir(String folder, boolean recursive) {
-		Utilities.checkNotNullArgument(folder);
+		Preconditions.checkNotNullArgument(folder, "folder is null");
 		
 		return FStream.from(m_catalog.getDataSetInfoAllInDir(folder, recursive))
 						.map(this::toSparkDataSet)
@@ -243,9 +243,9 @@ public class MarmotSpark implements Serializable {
 	 */
 	public SparkDataSet createDataSet(String dsId, RecordSchema schema, CreateDataSetOptions opts)
 		throws DataSetExistsException {
-		Utilities.checkNotNullArgument(dsId, "dataset id is null");
-		Utilities.checkNotNullArgument(schema, "dataset schema is null");
-		Utilities.checkNotNullArgument(opts, "CreateDataSetOptions is null");
+		Preconditions.checkNotNullArgument(dsId, "dataset id is null");
+		Preconditions.checkNotNullArgument(schema, "dataset schema is null");
+		Preconditions.checkNotNullArgument(opts, "CreateDataSetOptions is null");
 		
 		// 'force' 옵션이 있는 경우는 식별자에 해당하는 미리 삭제한다.
 		// 주어진 식별자가 폴더인 경우는 폴더 전체를 삭제한다.

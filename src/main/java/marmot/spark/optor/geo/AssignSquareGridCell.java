@@ -8,6 +8,11 @@ import org.locationtech.jts.geom.Polygon;
 
 import com.google.common.collect.Lists;
 
+import utils.Preconditions;
+import utils.Size2d;
+import utils.Size2i;
+import utils.stream.FStream;
+
 import marmot.GRecordSchema;
 import marmot.RecordSchema;
 import marmot.geo.GeoClientUtils;
@@ -16,10 +21,6 @@ import marmot.spark.RecordLite;
 import marmot.spark.optor.RecordLevelRDDFlatFunction;
 import marmot.type.DataType;
 import marmot.type.GridCell;
-import utils.Size2d;
-import utils.Size2i;
-import utils.Utilities;
-import utils.stream.FStream;
 
 /**
  * 
@@ -40,7 +41,7 @@ public class AssignSquareGridCell extends RecordLevelRDDFlatFunction {
 	public AssignSquareGridCell(SquareGrid grid, boolean assignOutside) {
 		super(true);
 		
-		Utilities.checkNotNullArgument(grid, "SquareGrid is null");
+		Preconditions.checkNotNullArgument(grid, "SquareGrid is null");
 		
 		m_grid = grid;
 		m_assignOutside = assignOutside;

@@ -4,6 +4,8 @@ import java.util.Map;
 
 import org.slf4j.LoggerFactory;
 
+import utils.Preconditions;
+
 import marmot.GRecordSchema;
 import marmot.Record;
 import marmot.RecordScript;
@@ -13,7 +15,6 @@ import marmot.spark.MarmotSpark;
 import marmot.spark.RecordLite;
 import marmot.support.DataUtils;
 import marmot.support.RecordScriptExecution;
-import utils.Utilities;
 
 
 /**
@@ -30,7 +31,7 @@ public class ScriptFilter extends RecordLevelRDDFilter {
 	public ScriptFilter(RecordScript script) {
 		super(PredicateOptions.DEFAULT);
 		
-		Utilities.checkNotNullArgument(script, "predicate is null");
+		Preconditions.checkNotNullArgument(script, "predicate is null");
 		
 		m_script = script;
 		
@@ -39,9 +40,8 @@ public class ScriptFilter extends RecordLevelRDDFilter {
 
 	@Override
 	protected void _initialize(MarmotSpark marmot, GRecordSchema inputGSchema) {
-		Utilities.checkNotNullArgument(marmot, "MarmotServer is null");
-		Utilities.checkNotNullArgument(inputGSchema,
-									() -> String.format("op: %s: input RecordSchema is null", this));
+		Preconditions.checkNotNullArgument(marmot, "MarmotServer is null");
+		Preconditions.checkNotNullArgument(inputGSchema, "op: %s: input RecordSchema is null", this);
 		
 		
 		m_filterExec.initialize(m_vrFact);

@@ -20,7 +20,7 @@ import com.google.common.collect.Sets;
 import com.google.common.primitives.Ints;
 
 import utils.Indexed;
-import utils.Utilities;
+import utils.Preconditions;
 import utils.func.FOption;
 import utils.stream.FStream;
 
@@ -189,19 +189,19 @@ public final class MarmotRDD implements Serializable {
 	}
 	
 	public MarmotRDD expand(String colDecls) {
-		Utilities.checkNotNullArgument(colDecls, "colDecls is null");
+		Preconditions.checkNotNullArgument(colDecls, "colDecls is null");
 		
 		return apply(new Expand(colDecls));
 	}
 	public MarmotRDD expand(String colDecls, String colInit) {
-		Utilities.checkNotNullArgument(colDecls, "colDecls is null");
-		Utilities.checkNotNullArgument(colInit, "colInit is null");
+		Preconditions.checkNotNullArgument(colDecls, "colDecls is null");
+		Preconditions.checkNotNullArgument(colInit, "colInit is null");
 		
 		return expand(colDecls, RecordScript.of(colInit));
 	}
 	public MarmotRDD expand(String colDecls, RecordScript colInitScript) {
-		Utilities.checkNotNullArgument(colDecls, "colDecls is null");
-		Utilities.checkNotNullArgument(colInitScript, "colInitScript is null");
+		Preconditions.checkNotNullArgument(colDecls, "colDecls is null");
+		Preconditions.checkNotNullArgument(colInitScript, "colInitScript is null");
 		
 		return apply(new Expand(colDecls).setInitializer(colInitScript));
 	}
@@ -222,7 +222,7 @@ public final class MarmotRDD implements Serializable {
 	 * @return 연산이 추가된 {@link PlanBuilder} 객체.
 	 */
 	public MarmotRDD defineColumn(String colDecl) {
-		Utilities.checkNotNullArgument(colDecl, "colDecl is null");
+		Preconditions.checkNotNullArgument(colDecl, "colDecl is null");
 
 		return apply(new DefineColumn(colDecl));
 	}
@@ -236,8 +236,8 @@ public final class MarmotRDD implements Serializable {
 	 * @return 연산이 추가된 {@link PlanBuilder} 객체.
 	 */
 	public MarmotRDD defineColumn(String colDecl, String colInit) {
-		Utilities.checkNotNullArgument(colDecl, "colDecl is null");
-		Utilities.checkNotNullArgument(colInit, "colInit is null");
+		Preconditions.checkNotNullArgument(colDecl, "colDecl is null");
+		Preconditions.checkNotNullArgument(colInit, "colInit is null");
 
 		return defineColumn(colDecl, RecordScript.of(colInit));
 	}
@@ -251,7 +251,7 @@ public final class MarmotRDD implements Serializable {
 	 * @return 연산이 추가된 {@link PlanBuilder} 객체.
 	 */
 	public MarmotRDD defineColumn(String colDecl, RecordScript colInitScript) {
-		Utilities.checkNotNullArgument(colDecl, "colDecl is null");
+		Preconditions.checkNotNullArgument(colDecl, "colDecl is null");
 
 		return apply(new DefineColumn(colDecl, colInitScript));
 	}
@@ -266,7 +266,7 @@ public final class MarmotRDD implements Serializable {
 	 * @return 연산이 추가된 {@link PlanBuilder} 객체.
 	 */
 	public MarmotRDD assignUid(String uidColName) {
-		Utilities.checkNotNullArgument(uidColName, "uid column is null");
+		Preconditions.checkNotNullArgument(uidColName, "uid column is null");
 		
 		return apply(new AssignUid(uidColName));
 	}
@@ -340,7 +340,7 @@ public final class MarmotRDD implements Serializable {
 	 * @return	명령이 추가된 {@link PlanBuilder} 객체.
 	 */
 	public MarmotRDD assignGridCell(SquareGrid grid, boolean assignOutside) {
-		Utilities.checkNotNullArgument(grid, "SquareGrid is null");
+		Preconditions.checkNotNullArgument(grid, "SquareGrid is null");
 
 		return apply(new AssignSquareGridCell(grid, assignOutside));
 	}
@@ -374,17 +374,17 @@ public final class MarmotRDD implements Serializable {
 
 	public MarmotRDD intersection(String paramGeomCol, String outputGeomCol,
 									GeometryDataType outputGeomType) {
-		Utilities.checkNotNullArgument(paramGeomCol, "parameter Geometry column name");
-		Utilities.checkNotNullArgument(outputGeomCol, "output Geometry column name");
-		Utilities.checkNotNullArgument(outputGeomType, "output Geometry column type");
+		Preconditions.checkNotNullArgument(paramGeomCol, "parameter Geometry column name");
+		Preconditions.checkNotNullArgument(outputGeomCol, "output Geometry column name");
+		Preconditions.checkNotNullArgument(outputGeomType, "output Geometry column type");
 
 		String geomCol = m_gschema.getGeometryColumnName();
 		return apply(new BinarySpatialIntersection(geomCol, paramGeomCol, outputGeomCol,
 													FOption.ofNullable(outputGeomType)));
 	}
 	public MarmotRDD intersection(String paramGeomCol, String outputGeomCol) {
-		Utilities.checkNotNullArgument(paramGeomCol, "parameter Geometry column name");
-		Utilities.checkNotNullArgument(outputGeomCol, "output Geometry column name");
+		Preconditions.checkNotNullArgument(paramGeomCol, "parameter Geometry column name");
+		Preconditions.checkNotNullArgument(outputGeomCol, "output Geometry column name");
 
 		String geomCol = m_gschema.getGeometryColumnName();
 		return apply(new BinarySpatialIntersection(geomCol, paramGeomCol, outputGeomCol,
@@ -537,10 +537,10 @@ public final class MarmotRDD implements Serializable {
 	}
 	
 	public static MarmotRDD union(Iterable<MarmotRDD> rdds) {
-		Utilities.checkNotNullArgument(rdds);
+		Preconditions.checkNotNullArgument(rdds, "rdds is null");
 		
 		MarmotRDD[] rddList = FStream.from(rdds).toArray(MarmotRDD.class);
-		Utilities.checkArgument(rddList.length > 0, "empty MarmotRDDs");
+		Preconditions.checkArgument(rddList.length > 0, "empty MarmotRDDs");
 		
 		GRecordSchema first = rddList[0].getGRecordSchema();
 		for ( int i =1; i < rddList.length; ++i ) {

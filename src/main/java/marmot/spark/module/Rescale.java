@@ -1,10 +1,11 @@
 package marmot.spark.module;
 
+import utils.Preconditions;
+
 import marmot.optor.AggregateFunction;
 import marmot.spark.MarmotRDD;
 import marmot.spark.RecordLite;
 import marmot.spark.optor.RDDFunction;
-import utils.Utilities;
 
 
 /**
@@ -15,7 +16,7 @@ public class Rescale implements RDDFunction {
 	private final String m_colName;
 
 	public Rescale(String colName) {
-		Utilities.checkNotNullArgument(colName, "rescaling column name");
+		Preconditions.checkNotNullArgument(colName, "rescaling column name");
 		
 		m_colName = colName;
 	}

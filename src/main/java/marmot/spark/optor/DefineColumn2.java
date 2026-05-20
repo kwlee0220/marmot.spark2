@@ -7,13 +7,14 @@ import org.apache.spark.sql.types.DataType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import utils.Preconditions;
+import utils.func.FOption;
+
 import marmot.Column;
 import marmot.GRecordSchema;
 import marmot.RecordSchema;
 import marmot.spark.MarmotSpark;
 import marmot.spark.Rows;
-import utils.Utilities;
-import utils.func.FOption;
 
 
 /**
@@ -34,7 +35,7 @@ public class DefineColumn2 extends AbstractDataFrameFunction {
 	}
 	
 	public DefineColumn2(String colDecl, String initExpr) {
-		Utilities.checkNotNullArgument(colDecl, "column declaration");
+		Preconditions.checkNotNullArgument(colDecl, "column declaration");
 		
 		m_colDecl = colDecl;
 		m_columnInitScript = FOption.ofNullable(initExpr);

@@ -26,7 +26,7 @@ public class UpdateDataSetInfo extends RDDConsumer {
 	}
 	
 	public static void update(MarmotSpark marmot, String dsId, FStream<DataSetPartitionInfo> infos) {
-		DataSetPartitionInfo total = infos.reduce(DataSetPartitionInfo::plus);
+		DataSetPartitionInfo total = infos.reduce(DataSetPartitionInfo::plus).get();
 		marmot.getCatalog().updateDataSetInfo(dsId, total);
 	}
 	

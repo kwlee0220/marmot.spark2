@@ -3,7 +3,9 @@ package marmot.spark.optor.geo;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.operation.buffer.BufferOp;
 
-import com.google.common.base.Preconditions;
+import utils.Preconditions;
+import utils.Tuple;
+import utils.func.FOption;
 
 import marmot.Column;
 import marmot.GRecordSchema;
@@ -12,10 +14,6 @@ import marmot.plan.GeomOpOptions;
 import marmot.spark.RecordLite;
 import marmot.support.DataUtils;
 import marmot.type.GeometryDataType;
-
-import utils.Tuple;
-import utils.Utilities;
-import utils.func.FOption;
 
 /**
  * 
@@ -41,7 +39,7 @@ public class BufferTransform extends SpatialRDDFunction {
 	
 	private BufferTransform(String distCol, GeomOpOptions opts) {
 		super(opts, false);
-		Utilities.checkNotNullArgument(distCol, "distance column is null");
+		Preconditions.checkNotNullArgument(distCol, "distance column is null");
 
 		m_distanceCol = distCol;
 	}

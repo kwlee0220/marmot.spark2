@@ -404,7 +404,7 @@ public class SparkDatasetCommands {
 //		@Parameters(paramLabel="dataset_id", index="1", arity="1..1",
 //					description={"dataset id to import onto"})
 //		public void setDataSetId(String id) {
-//			Utilities.checkNotNullArgument(id, "dataset id is null");
+//			Preconditions.checkNotNullArgument(id, "dataset id is null");
 //			m_params.setDataSetId(id);
 //		}
 //		
@@ -443,7 +443,7 @@ public class SparkDatasetCommands {
 //		@Parameters(paramLabel="dataset_id", index="1", arity="1..1",
 //				description={"dataset id to import onto"})
 //		public void setDataSetId(String id) {
-//			Utilities.checkNotNullArgument(id, "dataset id is null");
+//			Preconditions.checkNotNullArgument(id, "dataset id is null");
 //			m_params.setDataSetId(id);
 //		}
 //
@@ -484,7 +484,7 @@ public class SparkDatasetCommands {
 //		@Parameters(paramLabel="dataset_id", index="1", arity="1..1",
 //				description={"dataset id to import onto"})
 //		public void setDataSetId(String id) {
-//			Utilities.checkNotNullArgument(id, "dataset id is null");
+//			Preconditions.checkNotNullArgument(id, "dataset id is null");
 //			
 //			m_importParams.setDataSetId(id);
 //		}
@@ -525,7 +525,7 @@ public class SparkDatasetCommands {
 //		@Parameters(paramLabel="dataset_id", index="1", arity="1..1",
 //				description={"dataset id to import onto"})
 //		public void setDataSetId(String id) {
-//			Utilities.checkNotNullArgument(id, "dataset id is null");
+//			Preconditions.checkNotNullArgument(id, "dataset id is null");
 //			m_importParams.setDataSetId(id);
 //		}
 //

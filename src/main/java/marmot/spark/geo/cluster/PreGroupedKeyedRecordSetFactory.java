@@ -3,7 +3,7 @@ package marmot.spark.geo.cluster;
 import java.util.Iterator;
 
 import utils.KeyValue;
-import utils.Utilities;
+import utils.Preconditions;
 import utils.func.FOption;
 import utils.stream.FStream;
 import utils.stream.FStreams.AbstractFStream;
@@ -23,7 +23,7 @@ public class PreGroupedKeyedRecordSetFactory<K> implements KeyValueFStream<K,FSt
 	private Tuple2<K,RecordLite> m_next;
 	
 	public PreGroupedKeyedRecordSetFactory(Iterator<Tuple2<K,RecordLite>> src) {
-		Utilities.checkNotNullArgument(src, "RecordSet should not be null");
+		Preconditions.checkNotNullArgument(src, "RecordSet should not be null");
 		
 		m_src = src;
 		

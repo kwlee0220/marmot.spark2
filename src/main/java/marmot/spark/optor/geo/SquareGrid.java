@@ -7,9 +7,9 @@ import org.locationtech.jts.geom.Envelope;
 
 import utils.CSV;
 import utils.KeyValue;
+import utils.Preconditions;
 import utils.Size2d;
 import utils.UnitUtils;
-import utils.Utilities;
 import utils.func.Either;
 
 import marmot.geo.GeoClientUtils;
@@ -26,16 +26,16 @@ public class SquareGrid implements Serializable {
 	private double m_margin = 0;
 	
 	public SquareGrid(String dsId, Size2d cellSize) {
-		Utilities.checkNotNullArgument(dsId, "dataset id should not be null");
-		Utilities.checkNotNullArgument(cellSize, "Grid cell size should not be null");
+		Preconditions.checkNotNullArgument(dsId, "dataset id should not be null");
+		Preconditions.checkNotNullArgument(cellSize, "Grid cell size should not be null");
 
 		m_gridBounds = Either.left(dsId);
 		m_cellSize = cellSize;
 	}
 	
 	public SquareGrid(Envelope bounds, Size2d cellSize) {
-		Utilities.checkNotNullArgument(bounds, "Universe Envelope should not be null");
-		Utilities.checkNotNullArgument(cellSize, "Grid cell size should not be null");
+		Preconditions.checkNotNullArgument(bounds, "Universe Envelope should not be null");
+		Preconditions.checkNotNullArgument(cellSize, "Grid cell size should not be null");
 		
 		m_gridBounds = Either.right(bounds);
 		m_cellSize = cellSize;
@@ -101,7 +101,7 @@ public class SquareGrid implements Serializable {
 	}
 	
 	public static SquareGrid parseString(String expr) {
-		Utilities.checkNotNullArgument(expr, "SquareGrid string is null");
+		Preconditions.checkNotNullArgument(expr, "SquareGrid string is null");
 	
 		Map<String,String> kvMap = CSV.parseCsv(expr, ';')
 										.toKeyValueStream(KeyValue::parse)

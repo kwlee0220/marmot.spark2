@@ -3,12 +3,12 @@ package marmot.spark.optor.reducer;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.spark.api.java.JavaRDD;
 
 import com.google.common.collect.Lists;
 
 import utils.Tuple4;
-import utils.Utilities;
 import utils.stream.FStream;
 
 import marmot.GRecordSchema;
@@ -50,7 +50,8 @@ public class AggregateByGroup extends AbstractRDDFunction {
 		RecordSchema inputSchema = inputGSchema.getRecordSchema();
 		Tuple4<int[],int[],int[],int[]> colIdxes = GroupUtils.splitColumnIndexes(m_group, inputSchema);
 		
-		RecordSchema grpSchema = inputSchema.project(Utilities.concat(colIdxes._1, colIdxes._2));
+		
+		RecordSchema grpSchema = inputSchema.project(ArrayUtils.addAll(colIdxes._1, colIdxes._2));
 		m_valueSchema = inputSchema.project(colIdxes._4);
 		RecordSchema aggrSchema = FStream.of(m_aggrs)
 										.zipWithIndex()
@@ -72,7 +73,7 @@ public class AggregateByGroup extends AbstractRDDFunction {
 						.aggregateByKey(zeroValue, aggrList.getSequencer(), aggrList.getCombiner())
 						.mapValues(rec -> aggrList.toFinalValue(rec))
 						.map(t -> {
-							return RecordLite.of(Utilities.concat(t._1.values(), t._2.values()));
+							return RecordLite.of(ArrayUtils.addAll(t._1.values(), t._2.values()));
 						});
 	}
 

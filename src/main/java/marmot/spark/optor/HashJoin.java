@@ -61,7 +61,7 @@ public class HashJoin extends AbstractBinaryDataFrameFunction {
 		Column joinExpr = CSV.parseCsv(m_leftJoinCols).map(l::col)
 							.zipWith(CSV.parseCsv(m_rightJoinCols).map(r::col))
 							.map(t -> t._1.equalTo(t._2))
-							.reduce((e1,e2) -> e1.and(e2));
+							.reduce((e1,e2) -> e1.and(e2)).get();
 		
 		Column[] outCols = FStream.from(m_selector.getColumnSelectionInfoAll())
 									.map(c -> toColumnExpr(c, l, r))

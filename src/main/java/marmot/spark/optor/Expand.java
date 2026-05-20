@@ -5,6 +5,10 @@ import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import utils.Preconditions;
+import utils.Throwables;
+import utils.func.FOption;
+
 import marmot.Column;
 import marmot.GRecordSchema;
 import marmot.Record;
@@ -18,9 +22,6 @@ import marmot.support.DataUtils;
 import marmot.support.DefaultRecord;
 import marmot.support.RecordScriptExecution;
 import marmot.type.DataType;
-import utils.Throwables;
-import utils.Utilities;
-import utils.func.FOption;
 
 
 /**
@@ -43,13 +44,13 @@ public class Expand extends RecordLevelRDDFunction {
 	
 	public Expand(String columnDecls) {
 		super(true);
-		Utilities.checkNotNullArgument(columnDecls, "added columns are null");
+		Preconditions.checkNotNullArgument(columnDecls, "added columns are null");
 		
 		m_columnDecls = columnDecls;
 	}
 	
 	public Expand setInitializer(RecordScript initializer) {
-		Utilities.checkNotNullArgument(initializer, "column initializer is null");
+		Preconditions.checkNotNullArgument(initializer, "column initializer is null");
 		
 		m_script = FOption.ofNullable(initializer);
 		

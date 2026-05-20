@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.apache.spark.Partitioner;
 
-import utils.Utilities;
+import utils.Preconditions;
 import utils.stream.FStream;
 
 
@@ -25,7 +25,7 @@ public class QuadSpacePartitioner extends Partitioner {
 												.zipWithIndex()
 												.map(t -> new QuadSpacePartition(t.index(), t.value()))
 												.toArray(QuadSpacePartition.class);
-		Utilities.checkArgument(partitions.length > 0, "empty quadkeys");
+		Preconditions.checkArgument(partitions.length > 0, "empty quadkeys");
 		
 		return new QuadSpacePartitioner(partitions);
 	}

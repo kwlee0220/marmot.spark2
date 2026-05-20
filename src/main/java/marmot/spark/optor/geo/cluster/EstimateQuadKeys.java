@@ -12,6 +12,9 @@ import org.locationtech.jts.geom.Geometry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import utils.Preconditions;
+import utils.stream.FStream;
+
 import marmot.GRecordSchema;
 import marmot.RecordSchema;
 import marmot.RecordSet;
@@ -22,8 +25,6 @@ import marmot.spark.MarmotSpark;
 import marmot.spark.RecordLite;
 import marmot.spark.Rows;
 import marmot.spark.optor.AbstractRDDFunction;
-import utils.Utilities;
-import utils.stream.FStream;
 
 /**
  * 
@@ -46,7 +47,7 @@ public class EstimateQuadKeys extends AbstractRDDFunction {
 	
 	public EstimateQuadKeys(double sampleRatio) {
 		super(false);
-		Utilities.checkArgument(sampleRatio > 0, "invalid sampleRatio");
+		Preconditions.checkArgument(sampleRatio > 0, "invalid sampleRatio");
 		
 		m_sampleRatio = sampleRatio;
 		setLogger(s_logger);

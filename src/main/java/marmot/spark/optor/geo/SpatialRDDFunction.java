@@ -6,6 +6,11 @@ import javax.annotation.Nullable;
 
 import org.locationtech.jts.geom.Geometry;
 
+import utils.Preconditions;
+import utils.Tuple;
+import utils.func.FOption;
+import utils.stream.FStream;
+
 import marmot.Column;
 import marmot.GRecordSchema;
 import marmot.RecordSchema;
@@ -15,11 +20,6 @@ import marmot.spark.MarmotSpark;
 import marmot.spark.RecordLite;
 import marmot.spark.optor.AbstractRDDFunction;
 import marmot.type.GeometryDataType;
-
-import utils.Tuple;
-import utils.Utilities;
-import utils.func.FOption;
-import utils.stream.FStream;
 
 /**
  * 
@@ -43,7 +43,7 @@ public abstract class SpatialRDDFunction extends AbstractRDDFunction {
 	
 	protected SpatialRDDFunction(GeomOpOptions opts, boolean preservePartitions) {
 		super(preservePartitions);
-		Utilities.checkNotNullArgument(opts, "GeomOpOptions is null");
+		Preconditions.checkNotNullArgument(opts, "GeomOpOptions is null");
 		
 		m_options = opts;
 	}

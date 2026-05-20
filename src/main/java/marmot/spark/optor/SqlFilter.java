@@ -5,9 +5,10 @@ import org.apache.spark.sql.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import utils.Preconditions;
+
 import marmot.GRecordSchema;
 import marmot.spark.MarmotSpark;
-import utils.Utilities;
 
 
 /**
@@ -21,7 +22,7 @@ public class SqlFilter extends AbstractDataFrameFunction {
 	private final String m_predicate;
 	
 	public SqlFilter(String predicate) {
-		Utilities.checkNotNullArgument(predicate, "predicate");
+		Preconditions.checkNotNullArgument(predicate, "predicate");
 		
 		m_predicate = predicate;
 	}
