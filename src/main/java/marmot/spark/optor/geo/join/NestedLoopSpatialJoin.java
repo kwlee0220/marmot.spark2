@@ -151,7 +151,7 @@ public abstract class NestedLoopSpatialJoin extends AbstractRDDFunction {
 		return FStream.from(iter)
 						.map(outer -> sortOut(qkBinder, outer))
 						.filter(kv -> kv.key() != 0)
-						.toKeyValueStream(kv -> kv)
+						.mapToKeyValue(kv -> kv)
 						.liftKeyValues(inStrm -> new FindBiggestGroupWithinWindow<>(inStrm, 2 * MAX_WINDOW_SIZE))
 //						.findBiggestGroupWithinWindow(2 * MAX_WINDOW_SIZE, 2 * MAX_WINDOW_SIZE)
 						.flatMap(kv -> kv.key() == 1 ? joinWithClustering(kv.value())
@@ -163,7 +163,7 @@ public abstract class NestedLoopSpatialJoin extends AbstractRDDFunction {
 	
 	private FStream<Record> joinWithClustering(List<Tuple<RecordLite,List<String>>> list) {
 		return FStream.from(list)
-                        .toKeyValueStream(t -> KeyValue.of(t._2.get(0), t._1))
+                        .mapToKeyValue(t -> KeyValue.of(t._2.get(0), t._1))
 						.liftKeyValues(inStrm -> new FindBiggestGroupWithinWindow<>(inStrm, MAX_WINDOW_SIZE, 1))
 //						.findBiggestGroupWithinWindow(MAX_WINDOW_SIZE, 1)
 						.map(kv -> new ClusteringNLJoinJob(kv.key(), kv.value()))
@@ -207,7 +207,7 @@ public abstract class NestedLoopSpatialJoin extends AbstractRDDFunction {
 								= FStream.from(records)
 										.flatMap(t -> FStream.from(t._2)
 															.map(k -> KeyValue.of(k, t._1)))
-										.toKeyValueStream(Function.identity())
+										.mapToKeyValue(Function.identity())
 										.groupByKey()
 										.fstream()
 										.max(kv -> kv.value().size())

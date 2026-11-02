@@ -104,7 +104,7 @@ public class SquareGrid implements Serializable {
 		Preconditions.checkNotNullArgument(expr, "SquareGrid string is null");
 	
 		Map<String,String> kvMap = CSV.parseCsv(expr, ';')
-										.toKeyValueStream(KeyValue::parse)
+										.mapToKeyValue(KeyValue::parse)
 										.toMap();
 		
 		String cellExpr = kvMap.get("cell");
