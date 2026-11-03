@@ -235,11 +235,11 @@ public class SequenceFileDataSet implements SparkDataSet, HdfsDataSet<MarmotRDD>
 	public void cluster(ClusterSpatiallyOptions opts) {
 		QuadKeyRDD partitioned;
 		if ( opts.quadKeyList().isPresent() ) {
-			List<String> qkeys = opts.quadKeyList().getUnchecked();
+			List<String> qkeys = opts.quadKeyList().getOrNull();
 			partitioned = read().partitionByQuadkey(QuadSpacePartitioner.from(qkeys), true);
 		}
 		else if ( opts.quadKeyDsId().isPresent() ) {
-			SparkDataSet qkDs = m_marmot.getDataSet( opts.quadKeyDsId().getUnchecked());
+			SparkDataSet qkDs = m_marmot.getDataSet( opts.quadKeyDsId().getOrNull());
 			List<String> qkeys = qkDs.getSpatialQuadKeyAll();
 			partitioned = read().partitionByQuadkey(QuadSpacePartitioner.from(qkeys), true);
 		}
